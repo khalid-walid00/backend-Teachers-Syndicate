@@ -10,7 +10,7 @@ const { renderPageBySlug } = require("./services/render.service");
 const http = require("http");
 const { initSocket } = require("./services/realTime.service");
 const session = require("express-session");
-const RedisStore = require("connect-redis")(session);
+const RedisStore = require("connect-redis").default; 
 const { createClient } = require("redis");
 
 dotenv.config();
