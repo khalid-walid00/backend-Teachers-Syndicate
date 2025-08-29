@@ -11,6 +11,7 @@ const http = require("http");
 const { initSocket } = require("./services/realTime.service");
 
 dotenv.config();
+console.log("MONGO_URI:", process.env.MONGO_URI);
 
 if (!process.env.MONGO_URI) {
   console.error("❌ Error: MONGO_URI not defined in environment variables.");
