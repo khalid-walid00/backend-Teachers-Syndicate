@@ -49,8 +49,7 @@ app.use(errorHandler);
 const server = http.createServer(app);
 initSocket(server); // سيبها زي ما هي
 
-// ⚡ استخدام البورت الذي يحدده Fly.io
-const PORT = process.env.PORT || 5000;
-server.listen(PORT, "0.0.0.0", () => {
+const PORT = process.env.PORT || 5000; 
+server.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
-});
+});ئئئئ
