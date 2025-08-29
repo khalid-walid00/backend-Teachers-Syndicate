@@ -9,9 +9,6 @@ const responseHelper = require("./middleware/responsiveHandler");
 const { renderPageBySlug } = require("./services/render.service");
 const http = require("http");
 const { initSocket } = require("./services/realTime.service");
-const session = require("express-session");
-const RedisStore = require("connect-redis").default; 
-const { createClient } = require("redis");
 
 dotenv.config();
 
@@ -26,23 +23,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(responseHelper);
-
-// ⚡ Redis session (أفضل من MemoryStore في الإنتاج)
-const redisClient = createClient({ url: process.env.REDIS_URL || "redis://localhost:6379" });
-redisClient.connect().catch(console.error);
-
-const sessionMiddleware = session({
-  store: new RedisStore({ client: redisClient }),
-  secret: process.env.SESSION_SECRET || "supersecret",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    secure: process.env.NODE_ENV === "production", // true فقط في https
-    maxAge: 1000 * 60 * 60 * 24, // يوم واحد
-  },
-});
-
-app.use(sessionMiddleware);
 
 // 🛣️ Routes
 app.use("/api", pagination(20), routes);
@@ -65,12 +45,12 @@ app.get("*", async (req, res) => {
 app.use(notFound);
 app.use(errorHandler);
 
-// ⚡ Socket.io
+// ⚡ Socket.io بدون جلسات
 const server = http.createServer(app);
-initSocket(server, sessionMiddleware);
+initSocket(server); // سيبها زي ما هي
 
 // ⚡ استخدام البورت الذي يحدده Fly.io
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
