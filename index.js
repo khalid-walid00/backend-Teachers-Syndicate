@@ -11,13 +11,14 @@ const http = require("http");
 const { initSocket } = require("./services/realTime.service");
 
 dotenv.config();
-console.log("MONGO_URI:", process.env.MONGO_URI);
 
+// تأكد من وجود MONGO_URI
 if (!process.env.MONGO_URI) {
   console.error("❌ Error: MONGO_URI not defined in environment variables.");
   process.exit(1);
 }
 
+// الاتصال بقاعدة البيانات
 connectDB();
 
 const app = express();
@@ -48,9 +49,10 @@ app.use(errorHandler);
 
 // ⚡ Socket.io بدون جلسات
 const server = http.createServer(app);
-initSocket(server); // سيبها زي ما هي
+initSocket(server);
 
-const PORT = process.env.PORT || 5000; 
-server.listen(PORT, '0.0.0.0', () => {
+// ⚡ استخدام البورت الذي يحدده Fly.io أو الافتراضي 5000
+const PORT = process.env.PORT || 5000;
+server.listen(PORT, "0.0.0.0", () => {
   console.log(`🚀 Server running on port ${PORT}`);
-});ئئئئ
+});
